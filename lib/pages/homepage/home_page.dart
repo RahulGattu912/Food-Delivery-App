@@ -433,7 +433,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   ),
                 )),
                 const SizedBox(
-                  height: 40,
+                  height: 24,
                 ),
                 SizedBox(
                   height: 168,
