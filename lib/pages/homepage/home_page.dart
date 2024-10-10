@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       }
       _pageController.animateToPage(
         _currentIndex,
-        duration: const Duration(milliseconds: 400),
+        duration: const Duration(milliseconds: 600),
         curve: Curves.easeInOut,
       );
     });
@@ -216,7 +216,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               height: 5,
             ),
             Container(
-              height: 36,
+              height: 40,
               width: MediaQuery.of(context).size.width * 0.95,
               //372,
               decoration: BoxDecoration(
@@ -233,8 +233,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   ),
                   Text(
                     'Free delivery + Extra 50% Off',
-                    style: theme.titleSmall
-                        ?.copyWith(color: const Color(0xFFFFFFFF)),
+                    style: theme.titleSmall?.copyWith(
+                        color: const Color(0xFFFFFFFF), fontSize: 12),
                   ),
                 ],
               ),
