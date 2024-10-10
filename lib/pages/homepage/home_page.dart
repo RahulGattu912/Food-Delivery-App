@@ -482,7 +482,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         img: 'assets/images/stack-images/img1.png',
                         name: 'Daily Meals',
                         color: const Color(0xFFFEC919),
-                        //context: context
+                        context: context,
                       ),
                       const SizedBox(
                         width: 10,
@@ -491,7 +491,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         img: 'assets/images/stack-images/img2.png',
                         name: 'Tiffins',
                         color: const Color(0xFFD4CCFF),
-                        //context: context
+                        context: context,
                       ),
                       const SizedBox(
                         width: 10,
@@ -500,7 +500,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         img: 'assets/images/stack-images/img3.png',
                         name: 'Quick Bites',
                         color: const Color(0xFFBDE9FE),
-                        //context: context
+                        context: context,
                       ),
                       const SizedBox(
                         width: 10,
@@ -509,7 +509,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         img: 'assets/images/stack-images/img4.png',
                         name: 'Pan-Asian',
                         color: const Color(0xFFFFDACF),
-                        //context: context
+                        context: context,
                       ),
                     ],
                   ),
@@ -890,6 +890,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
+                      Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                            color: const Color(0xFFEBEBEB),
+                            borderRadius: BorderRadius.circular(14)),
+                        child: Text(
+                          'All',
+                          style: theme.displaySmall
+                              ?.copyWith(color: const Color(0xFF767676)),
+                        ),
+                      ),
                       Container(
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(

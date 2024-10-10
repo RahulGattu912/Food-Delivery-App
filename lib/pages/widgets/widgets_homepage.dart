@@ -91,15 +91,19 @@ Widget stackSpace1(
   );
 }
 
-Widget stackSpace({required String img, required String name, required color}) {
+Widget stackSpace(
+    {required String img,
+    required String name,
+    required color,
+    required BuildContext context}) {
   return SizedBox(
     height: 112,
-    width: 91,
+    width: MediaQuery.of(context).size.width / 4.5,
     child: Stack(
       clipBehavior: Clip.none,
       children: [
         Container(
-          width: 91,
+          width: MediaQuery.of(context).size.width / 4.5,
           height: 89,
           decoration: BoxDecoration(
               color: color, borderRadius: BorderRadius.circular(16)),
