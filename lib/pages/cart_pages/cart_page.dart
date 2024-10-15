@@ -489,18 +489,18 @@ class _CartPageState extends State<CartPage> {
                                 ],
                               ),
                             ),
-                            Text(
-                              'Note',
-                              style: theme.titleLarge,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              textAlign: TextAlign.justify,
-                              'Lorem ipsum dolor sit amet consectetur. Pretium vitae venenatis arcu ac mauris ridiculus tempor sed. Vitae amet elit ante a viverra ut pharetra a. Non diam eget neque dignissim vitae. Eget dolor at ornare nisi lectus tincidunt. Lorem ipsum dolor sit amet consectetur. Pretium vitae venenatis arcu ac mauris ridiculus tempor sed. ',
-                              style: theme.bodyMedium,
-                            ),
+                            // Text(
+                            //   'Note',
+                            //   style: theme.titleLarge,
+                            // ),
+                            // const SizedBox(
+                            //   height: 10,
+                            // ),
+                            // Text(
+                            //   textAlign: TextAlign.justify,
+                            //   'Lorem ipsum dolor sit amet consectetur. Pretium vitae venenatis arcu ac mauris ridiculus tempor sed. Vitae amet elit ante a viverra ut pharetra a. Non diam eget neque dignissim vitae. Eget dolor at ornare nisi lectus tincidunt. Lorem ipsum dolor sit amet consectetur. Pretium vitae venenatis arcu ac mauris ridiculus tempor sed. ',
+                            //   style: theme.bodyMedium,
+                            // ),
                             const SizedBox(
                               height: 100,
                             ),

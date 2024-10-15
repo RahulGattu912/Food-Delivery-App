@@ -55,10 +55,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   void _startTextAnimation() {
     Future.delayed(const Duration(seconds: 1), () {
-      setState(() {
-        index = (index + 1) % searchList.length;
-      });
-      _startTextAnimation(); // Repeat the animation for the next text
+      if (mounted) {
+        setState(() {
+          index = (index + 1) % searchList.length;
+        });
+        _startTextAnimation(); // Repeat the animation for the next text
+      }
     });
   }
 
@@ -113,6 +115,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void dispose() {
     _timer?.cancel();
     _pageController.dispose();
+    WidgetsBinding.instance.removeObserver(this); // Remove the observer
     super.dispose();
   }
 

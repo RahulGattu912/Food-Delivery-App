@@ -3,8 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 // import 'package:food_delivery_app/insert_items_page.dart';
 import 'package:food_delivery_app/pages/cart_pages/cart_provider.dart';
+import 'package:food_delivery_app/pages/login_pages/initial_page.dart';
 import 'package:food_delivery_app/pages/navigation_page/navigation_page.dart';
-import 'package:food_delivery_app/pages/onboarding_page/onboarding.dart';
+// import 'package:food_delivery_app/pages/onboarding_page/onboarding.dart';
 import 'package:food_delivery_app/pages/order_pages/order_history/order_provider.dart';
 import 'package:food_delivery_app/pages/themes/themes.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
               return const Scaffold(
                   backgroundColor: Colors.white, body: NavigationPage());
             } else {
-              return const OnBoardingPage();
+              return const InitialPage();
             }
           }),
     );

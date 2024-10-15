@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:food_delivery_app/pages/onboarding_page/onboarding.dart';
+import 'package:food_delivery_app/pages/login_pages/initial_page.dart';
+// import 'package:food_delivery_app/pages/onboarding_page/onboarding.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:food_delivery_app/pages/navigation_page/navigation_page.dart';
 import 'package:food_delivery_app/pages/profile_pages/communication_preferences.dart';
@@ -32,7 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (mounted) {
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => const OnBoardingPage()),
+          MaterialPageRoute(builder: (context) => const InitialPage()),
           (Route<void> route) => false);
     }
   }

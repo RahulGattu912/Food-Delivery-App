@@ -13,7 +13,7 @@ import flutter_secure_storage_macos
 import geolocator_apple
 import google_sign_in_ios
 import path_provider_foundation
-import sqflite
+import sqflite_darwin
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   FLTFirebaseFirestorePlugin.register(with: registry.registrar(forPlugin: "FLTFirebaseFirestorePlugin"))

@@ -124,6 +124,51 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  // Future<void> _signInWithGoogle() async {
+  //   try {
+  //     // Trigger Google Sign-In process
+  //     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+  //     if (googleUser == null) {
+  //       // User canceled the sign-in
+  //       return;
+  //     }
+
+  //     // Obtain authentication details from Google
+  //     final GoogleSignInAuthentication googleAuth =
+  //         await googleUser.authentication;
+
+  //     // Create a credential for Firebase
+  //     final AuthCredential credential = GoogleAuthProvider.credential(
+  //       accessToken: googleAuth.accessToken,
+  //       idToken: googleAuth.idToken,
+  //     );
+
+  //     // Sign in to Firebase using the Google credential
+  //     UserCredential userCredential =
+  //         await FirebaseAuth.instance.signInWithCredential(credential);
+
+  //     // Ensure the user has signed in successfully
+  //     if (userCredential.user != null) {
+  //       print("Google sign-in successful!");
+  //     }
+
+  //     // Only proceed if the widget is still in the tree
+  //     if (!mounted) return;
+
+  //     // Navigate to your main application page (or wherever you want)
+  //     Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => const NavigationPage()),
+  //     );
+  //   } catch (e) {
+  //     // Display or log the error if something went wrong during sign-in
+  //     setState(() {
+  //       _errorMessage = 'Error signing in with Google: $e';
+  //     });
+  //     print("Google sign-in error: $e");
+  //   }
+  // }
+
   Future<void> _signInWithFacebook() async {
     try {
       final LoginResult result = await FacebookAuth.instance.login();
