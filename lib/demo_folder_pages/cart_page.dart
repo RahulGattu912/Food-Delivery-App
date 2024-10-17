@@ -6,6 +6,7 @@ import 'package:food_delivery_app/pages/address/address.dart';
 import 'package:food_delivery_app/pages/cart_pages/cart_provider.dart';
 import 'package:food_delivery_app/pages/cart_pages/count_provider.dart';
 import 'package:food_delivery_app/pages/geolocation/geo_location.dart';
+import 'package:food_delivery_app/pages/location/location_provider.dart';
 import 'package:food_delivery_app/pages/navigation_page/navigation_page.dart';
 import 'package:food_delivery_app/pages/order_pages/order_history/order_provider.dart';
 // import 'package:food_delivery_app/pages/order_pages/order_history/order_provider.dart';
@@ -86,7 +87,9 @@ class _CartPageState extends State<CartPage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  const NavigationPage()));
+                                                  const NavigationPage(
+                                                    initialIndex: 0,
+                                                  )));
                                     },
                                     icon: const Icon(Icons.arrow_back_ios)),
                                 Text(
@@ -569,19 +572,23 @@ class _CartPageState extends State<CartPage> {
                                 )
                               ],
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 16, right: 16),
-                              child: _isLoading
-                                  ? CircularProgressIndicator(
-                                      color: colorTheme.primaryColor,
-                                    )
-                                  : Text(
-                                      _address,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: theme.labelLarge?.copyWith(
-                                          color: const Color(0xFFA1A1A1)),
-                                    ),
+                            Consumer<LocationProvider>(
+                              builder: (context, locationProvider, child) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 16, right: 16),
+                                  child: locationProvider.location.isEmpty
+                                      ? CircularProgressIndicator(
+                                          color: colorTheme.primaryColor,
+                                        )
+                                      : Text(
+                                          locationProvider.location,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: theme.labelLarge?.copyWith(
+                                              color: const Color(0xFFA1A1A1)),
+                                        ),
+                                );
+                              },
                             ),
                             const Spacer(),
                             Consumer<CartProvider>(
@@ -607,18 +614,22 @@ class _CartPageState extends State<CartPage> {
                                         await FirebaseFirestore.instance
                                             .collection('orders')
                                             .doc(uid)
-                                            .update({
-                                          'items': FieldValue.arrayUnion([
-                                            {
-                                              'name': item[2],
-                                              'restaurant': item[0],
-                                              'type': item[6],
-                                              'cost': item[4],
-                                              'address': _address,
-                                              'count': item[5],
-                                            }
-                                          ])
-                                        });
+                                            .set(
+                                                {
+                                              'items': FieldValue.arrayUnion([
+                                                {
+                                                  'name': item[2],
+                                                  'restaurant': item[0],
+                                                  'type': item[6],
+                                                  'cost': item[4],
+                                                  'address': _address,
+                                                  'count': item[5],
+                                                }
+                                              ])
+                                            },
+                                                SetOptions(
+                                                    merge:
+                                                        true)); // Use merge: true to update or create if not exists
                                       }
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(

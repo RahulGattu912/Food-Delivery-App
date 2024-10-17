@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:food_delivery_app/pages/onboarding_page/onboarding.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 class InitialPage extends StatefulWidget {
@@ -43,7 +44,7 @@ class _InitialPageState extends State<InitialPage> {
 
       // Ensure the user has signed in successfully
       if (userCredential.user != null) {
-        print("Google sign-in successful!");
+        debugPrint("Google sign-in successful!");
 
         await _sendUserDataToServer(googleAuth.idToken!, userCredential);
       }
@@ -54,15 +55,24 @@ class _InitialPageState extends State<InitialPage> {
       // Navigate to your main application page (or wherever you want)
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const NavigationPage()),
+        MaterialPageRoute(
+            builder: (context) => const NavigationPage(
+                  initialIndex: 0,
+                )),
       );
     } catch (e) {
       // Display or log the error if something went wrong during sign-in
       // setState(() {
       //   _errorMessage = 'Error signing in with Google: $e';
       // });
-      print("Google sign-in error: $e");
+      debugPrint("Google sign-in error: $e");
     }
+  }
+
+  Future<void> storeToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('jwtToken', token);
+    debugPrint('JWT Token ${prefs.getString('jwtToken')}');
   }
 
   Future<void> _sendUserDataToServer(
@@ -71,12 +81,12 @@ class _InitialPageState extends State<InitialPage> {
 
     // Prepare the data to send to the server
     Map<String, dynamic> userData = {
-      'idToken': idToken,
-      'uid': userCredential.user?.uid,
+      // 'idToken': idToken,
+      // 'uid': userCredential.user?.uid,
       'displayName': userCredential.user?.displayName,
       'email': userCredential.user?.email,
     };
-    print(userData['email']);
+    // print(userData['email']);
     try {
       // Make the POST request
       final response = await http.post(
@@ -88,14 +98,19 @@ class _InitialPageState extends State<InitialPage> {
       );
 
       // Check for a successful response
-      if (response.statusCode == 201) {
-        print('User data sent successfully: ${response.body}');
+      if (response.statusCode == 201 || response.statusCode == 409) {
+        final token = jsonDecode(response.body)['jwtToken'];
+        // print('Response body');
+        // print(jsonDecode(response.body)['jwtToken']);
+        // print(token);
+        await storeToken(token); // Store the token in SharedPreferences
+        debugPrint('User data sent successfully: ${response.body}');
       } else {
-        print(
+        debugPrint(
             'Failed to send user data: ${response.statusCode} - ${response.body}');
       }
     } catch (error) {
-      print('Error occurred while sending user data: $error');
+      debugPrint('Error occurred while sending user data: $error');
     }
     return;
   }

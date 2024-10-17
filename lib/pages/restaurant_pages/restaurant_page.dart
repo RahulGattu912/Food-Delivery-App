@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:food_delivery_app/pages/cart_pages/cart1_page.dart';
+// import 'package:food_delivery_app/pages/cart_pages/cart1_page.dart';
 //import 'package:food_delivery_app/pages/cart_pages/cart_page.dart';
 import 'package:food_delivery_app/pages/cart_pages/cart_provider.dart';
+// import 'package:food_delivery_app/pages/navigation_page/index_provider.dart';
+import 'package:food_delivery_app/pages/navigation_page/navigation_page.dart';
 import 'package:provider/provider.dart';
 
 class RestaurantPage extends StatefulWidget {
@@ -920,11 +922,12 @@ class _RestaurantPageState extends State<RestaurantPage> {
                                 GestureDetector(
                                   onTap: () {
                                     Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const Cart1Page()),
-                                    );
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const NavigationPage(
+                                                  initialIndex: 3,
+                                                )));
                                   },
                                   child: Container(
                                     height: 30,

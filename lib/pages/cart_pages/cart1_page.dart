@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,7 +6,10 @@ import 'package:food_delivery_app/pages/address/address.dart';
 import 'package:food_delivery_app/pages/cart_pages/cart_provider.dart';
 import 'package:food_delivery_app/pages/cart_pages/count_provider.dart';
 import 'package:food_delivery_app/pages/geolocation/geo_location.dart';
+import 'package:food_delivery_app/pages/location/location_provider.dart';
 import 'package:food_delivery_app/pages/navigation_page/navigation_page.dart';
+import 'package:food_delivery_app/pages/order_pages/order_history/order_provider.dart';
+import 'package:food_delivery_app/pages/order_pages/order_page.dart';
 import 'package:provider/provider.dart';
 import 'package:food_delivery_app/pages/widgets/widgets_cart_page.dart';
 
@@ -82,7 +86,9 @@ class _CartPageState extends State<Cart1Page> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  const NavigationPage()));
+                                                  const NavigationPage(
+                                                    initialIndex: 0,
+                                                  )));
                                     },
                                     icon: const Icon(Icons.arrow_back_ios)),
                                 Text(
@@ -181,7 +187,7 @@ class _CartPageState extends State<Cart1Page> {
                                                   borderRadius:
                                                       BorderRadius.circular(8),
                                                   image: DecorationImage(
-                                                    image: AssetImage(provider
+                                                    image: NetworkImage(provider
                                                         .cart[index][3]),
                                                     fit: BoxFit.cover,
                                                   ),
@@ -277,9 +283,7 @@ class _CartPageState extends State<Cart1Page> {
                                               left: 0,
                                               child: Container(
                                                 color: Colors.white,
-                                                child: provider.cart[index]
-                                                            [6] ==
-                                                        'Yes'
+                                                child: provider.cart[index][6]
                                                     ? SvgPicture.asset(
                                                         'assets/svg/veg_non-veg/veg.svg',
                                                         height: 17,
@@ -487,18 +491,18 @@ class _CartPageState extends State<Cart1Page> {
                                 ],
                               ),
                             ),
-                            Text(
-                              'Note',
-                              style: theme.titleLarge,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              textAlign: TextAlign.justify,
-                              'Lorem ipsum dolor sit amet consectetur. Pretium vitae venenatis arcu ac mauris ridiculus tempor sed. Vitae amet elit ante a viverra ut pharetra a. Non diam eget neque dignissim vitae. Eget dolor at ornare nisi lectus tincidunt. Lorem ipsum dolor sit amet consectetur. Pretium vitae venenatis arcu ac mauris ridiculus tempor sed. ',
-                              style: theme.bodyMedium,
-                            ),
+                            // Text(
+                            //   'Note',
+                            //   style: theme.titleLarge,
+                            // ),
+                            // const SizedBox(
+                            //   height: 10,
+                            // ),
+                            // Text(
+                            //   textAlign: TextAlign.justify,
+                            //   'Lorem ipsum dolor sit amet consectetur. Pretium vitae venenatis arcu ac mauris ridiculus tempor sed. Vitae amet elit ante a viverra ut pharetra a. Non diam eget neque dignissim vitae. Eget dolor at ornare nisi lectus tincidunt. Lorem ipsum dolor sit amet consectetur. Pretium vitae venenatis arcu ac mauris ridiculus tempor sed. ',
+                            //   style: theme.bodyMedium,
+                            // ),
                             const SizedBox(
                               height: 100,
                             ),
@@ -567,44 +571,100 @@ class _CartPageState extends State<Cart1Page> {
                                 )
                               ],
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 16, right: 16),
-                              child: _isLoading
-                                  ? CircularProgressIndicator(
-                                      color: colorTheme.primaryColor,
-                                    )
-                                  : Text(
-                                      _address,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: theme.labelLarge?.copyWith(
-                                          color: const Color(0xFFA1A1A1)),
-                                    ),
+                            Consumer<LocationProvider>(
+                              builder: (context, locationProvider, child) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 16, right: 16),
+                                  child: locationProvider.location.isEmpty
+                                      ? CircularProgressIndicator(
+                                          color: colorTheme.primaryColor,
+                                        )
+                                      : Text(
+                                          locationProvider.location,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: theme.labelLarge?.copyWith(
+                                              color: const Color(0xFFA1A1A1)),
+                                        ),
+                                );
+                              },
                             ),
                             const Spacer(),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 32, right: 32),
-                              child: GestureDetector(
-                                onTap: () {
-                                  completeOrderAddress(
-                                      context, theme, colorTheme);
-                                },
-                                child: Container(
-                                  height: 56,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(32),
-                                    color: colorTheme.primaryColor,
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'Complete Order',
-                                      style: theme.titleMedium?.copyWith(
-                                          color: const Color(0xFFFFFFFF)),
+                            Consumer<CartProvider>(
+                              builder: (context, cartProvider, child) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 32, right: 32),
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      final uid = FirebaseAuth
+                                          .instance.currentUser?.uid;
+                                      final orderProvider =
+                                          context.read<OrderProvider>();
+                                      // Add cart items to orders collection
+                                      for (var item in cartProvider.cart) {
+                                        orderProvider.addCurrentOrder(
+                                            name: item[2],
+                                            restaurant: item[0],
+                                            type: item[6],
+                                            cost: item[4],
+                                            address: _address,
+                                            count: item[5]);
+                                        await FirebaseFirestore.instance
+                                            .collection('orders')
+                                            .doc(uid)
+                                            .update({
+                                          'items': FieldValue.arrayUnion([
+                                            {
+                                              'name': item[2],
+                                              'restaurant': item[0],
+                                              'type': item[6],
+                                              'cost': item[4],
+                                              'address': _address,
+                                              'count': item[5],
+                                            }
+                                          ])
+                                        });
+                                      }
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            backgroundColor:
+                                                colorTheme.primaryColor,
+                                            content: const Text(
+                                              'Order placed successfully',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            )),
+                                      );
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const OrderPage()));
+                                      cartProvider.reset();
+                                    },
+                                    child: Container(
+                                      height: 56,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(32),
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          'Complete Order',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium
+                                              ?.copyWith(
+                                                  color:
+                                                      const Color(0xFFFFFFFF)),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
+                                );
+                              },
                             ),
                             const Spacer(),
                           ],

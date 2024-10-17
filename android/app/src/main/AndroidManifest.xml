@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
 
-    <application android:label="Crave" android:icon="@mipmap/ic_launcher" android:enableOnBackInvokedCallback="true">
+    <application android:label="Crave" android:icon="@mipmap/launcher_icon" android:enableOnBackInvokedCallback="true">
 
         <!-- Firebase Cloud Messaging -->
         <receiver android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver" android:exported="true" android:permission="com.google.android.c2dm.permission.SEND">

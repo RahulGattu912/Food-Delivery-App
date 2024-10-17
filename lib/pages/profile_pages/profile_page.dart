@@ -53,7 +53,9 @@ class _ProfilePageState extends State<ProfilePage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const NavigationPage()));
+                      builder: (context) => const NavigationPage(
+                            initialIndex: 0,
+                          )));
             },
             icon: const Icon(Icons.arrow_back_ios_new),
           )),

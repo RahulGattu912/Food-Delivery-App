@@ -3,9 +3,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 // import 'package:food_delivery_app/insert_items_page.dart';
 import 'package:food_delivery_app/pages/cart_pages/cart_provider.dart';
+import 'package:food_delivery_app/pages/location/location_provider.dart';
 import 'package:food_delivery_app/pages/login_pages/initial_page.dart';
+import 'package:food_delivery_app/pages/navigation_page/index_provider.dart';
 import 'package:food_delivery_app/pages/navigation_page/navigation_page.dart';
-// import 'package:food_delivery_app/pages/onboarding_page/onboarding.dart';
 import 'package:food_delivery_app/pages/order_pages/order_history/order_provider.dart';
 import 'package:food_delivery_app/pages/themes/themes.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,8 @@ void main() async {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => CartProvider()),
     ChangeNotifierProvider(create: (context) => OrderProvider()),
+    ChangeNotifierProvider(create: (context) => LocationProvider()),
+    ChangeNotifierProvider(create: (context) => IndexProvider(initialIndex: 0)),
   ], child: const MyApp()));
 }
 
@@ -41,7 +44,10 @@ class MyApp extends StatelessWidget {
             }
             if (snapshot.data != null) {
               return const Scaffold(
-                  backgroundColor: Colors.white, body: NavigationPage());
+                  backgroundColor: Colors.white,
+                  body: NavigationPage(
+                    initialIndex: 0,
+                  ));
             } else {
               return const InitialPage();
             }

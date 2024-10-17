@@ -170,6 +170,7 @@ class _SignupPageState extends State<SignupPage> {
     final bodyMedium = Theme.of(context).textTheme.bodyMedium;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(

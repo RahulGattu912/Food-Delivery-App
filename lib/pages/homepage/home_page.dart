@@ -4,12 +4,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:food_delivery_app/pages/address/address.dart';
-import 'package:food_delivery_app/pages/restaurant_pages/category_page.dart';
+import 'package:food_delivery_app/pages/location/location_provider.dart';
+import 'package:food_delivery_app/pages/navigation_page/navigation_page.dart';
+// import 'package:food_delivery_app/pages/restaurant_pages/category_page.dart';
 import 'package:food_delivery_app/pages/geolocation/geo_location.dart';
-import 'package:food_delivery_app/pages/order_pages/order_page.dart';
+// import 'package:food_delivery_app/pages/order_pages/order_page.dart';
 import 'package:food_delivery_app/pages/search_page/search_page.dart';
 import 'package:food_delivery_app/pages/widgets/widgets_cart_page.dart';
 import 'package:food_delivery_app/pages/widgets/widgets_homepage.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,6 +26,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   int _currentIndex = 0;
   final PageController _pageController = PageController(viewportFraction: 0.8);
   Timer? _timer;
+  // LocationProvider locationProvider = LocationProvider();
   final List<String> _cardTitles = [
     'assets/images/adspace/ad1.png',
     'assets/images/adspace/ad2.png',
@@ -86,15 +90,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   void _fetchAddress() async {
-    String locationMessage =
-        await _locationService.getLocationMessage('Home', currentUser!.uid);
-    if (mounted) {
-      setState(() {
-        _address = locationMessage;
-        _isLoading = false;
-      });
-    }
+    await Provider.of<LocationProvider>(context, listen: false)
+        .getLocationMessage('Home', currentUser!.uid);
   }
+  // void _fetchAddress() async {
+  //   String locationMessage =
+  //       await _locationService.getLocationMessage('Home', currentUser!.uid);
+  //   if (mounted) {
+  //     setState(() {
+  //       _address = locationMessage;
+  //       _isLoading = false;
+  //     });
+  //   }
+  // }
 
   void _startAutoScroll() {
     _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
@@ -274,19 +282,33 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               ),
             ),
           ),
-          title: GestureDetector(
-            onTap: () {
-              showAddresses(context, theme, colorTheme);
+          title: Consumer<LocationProvider>(
+            builder: (context, locationProvider, child) {
+              return GestureDetector(
+                  onTap: () {
+                    showAddresses(context, theme, colorTheme);
+                  },
+                  child: locationProvider.location.isNotEmpty
+                      ? Text(
+                          locationProvider.location,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.displayLarge,
+                        )
+                      : CircularProgressIndicator(
+                          color: colorTheme.primaryColor,
+                        )
+                  // ? Text('Fetching location...',
+                  //     style: theme.labelMedium
+                  //         ?.copyWith(color: colorTheme.primaryColor))
+                  // : Text(
+                  //     _address.isNotEmpty
+                  //         ? _address
+                  //         : 'Location not available',
+                  //     overflow: TextOverflow.ellipsis,
+                  //     style: theme.displayLarge,
+                  //   ),
+                  );
             },
-            child: _isLoading
-                ? Text('Fetching location...',
-                    style: theme.labelMedium
-                        ?.copyWith(color: colorTheme.primaryColor))
-                : Text(
-                    _address.isNotEmpty ? _address : 'Location not available',
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.displayLarge,
-                  ),
           ),
           actions: [
             Padding(
@@ -296,7 +318,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const OrderPage()));
+                            builder: (context) =>
+                                const NavigationPage(initialIndex: 3)));
                   },
                   style: ButtonStyle(
                     backgroundColor:
@@ -964,7 +987,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const CategoryPage()));
+                            builder: (context) => const NavigationPage(
+                                  initialIndex: 2,
+                                )));
                   },
                   child: Container(
                     height: 60,

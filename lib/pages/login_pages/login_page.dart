@@ -41,7 +41,10 @@ class _LoginPageState extends State<LoginPage> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const NavigationPage()),
+          MaterialPageRoute(
+              builder: (context) => const NavigationPage(
+                    initialIndex: 0,
+                  )),
         );
       } catch (e) {
         setState(() {
@@ -113,7 +116,10 @@ class _LoginPageState extends State<LoginPage> {
       // Navigate to your main application page (or wherever you want)
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const NavigationPage()),
+        MaterialPageRoute(
+            builder: (context) => const NavigationPage(
+                  initialIndex: 0,
+                )),
       );
     } catch (e) {
       // Display or log the error if something went wrong during sign-in
@@ -184,7 +190,10 @@ class _LoginPageState extends State<LoginPage> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const NavigationPage()),
+          MaterialPageRoute(
+              builder: (context) => const NavigationPage(
+                    initialIndex: 0,
+                  )),
         );
       }
       // else {

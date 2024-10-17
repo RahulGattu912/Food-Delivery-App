@@ -87,7 +87,9 @@ class _OrderPageState extends State<OrderPage> {
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const NavigationPage()),
+                            builder: (context) => const NavigationPage(
+                                  initialIndex: 0,
+                                )),
                         (Route<dynamic> route) => false);
                   },
                   icon: const Icon(Icons.arrow_back_ios_new)),

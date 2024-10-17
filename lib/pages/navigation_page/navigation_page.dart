@@ -1,20 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:food_delivery_app/pages/cart_pages/cart_page.dart';
+import 'package:food_delivery_app/demo_folder_pages/cart_page.dart';
+import 'package:food_delivery_app/pages/navigation_page/index_provider.dart';
 import 'package:food_delivery_app/pages/restaurant_pages/category_page.dart';
 import 'package:food_delivery_app/pages/homepage/home_page.dart';
 import 'package:food_delivery_app/pages/order_pages/order_page.dart';
 import 'package:food_delivery_app/pages/profile_pages/profile_page.dart';
+import 'package:provider/provider.dart';
 
 class NavigationPage extends StatefulWidget {
-  const NavigationPage({super.key});
+  final int initialIndex;
+  const NavigationPage({super.key, this.initialIndex = 0});
 
   @override
   State<NavigationPage> createState() => _NavigationPageState();
 }
 
 class _NavigationPageState extends State<NavigationPage> {
-  int _currentIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<IndexProvider>(context, listen: false)
+          .setIndex(widget.initialIndex);
+    });
+  }
+
+  // late int _currentIndex;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _currentIndex = widget.initialIndex;
+  // }
 
   final List<Widget> _pages = [
     const HomePage(),
@@ -27,59 +45,67 @@ class _NavigationPageState extends State<NavigationPage> {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
-    return Scaffold(
-      floatingActionButton: Container(
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFFFE7B55),
-                Color(0xFFFD9D7A),
-              ]),
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFFE724C)
-                  .withOpacity(0.5), // Custom shadow color
-              blurRadius: 10,
-              spreadRadius: 2,
-              offset: const Offset(0, 5), // Adjust shadow position
+    return Consumer<IndexProvider>(
+      builder:
+          (BuildContext context, IndexProvider indexProvider, Widget? child) {
+        return Scaffold(
+          floatingActionButton: Container(
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0xFFFE7B55),
+                    Color(0xFFFD9D7A),
+                  ]),
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFFFE724C)
+                      .withOpacity(0.5), // Custom shadow color
+                  blurRadius: 10,
+                  spreadRadius: 2,
+                  offset: const Offset(0, 5), // Adjust shadow position
+                ),
+              ],
             ),
-          ],
-        ),
-        child: FloatingActionButton(
-          splashColor: primaryColor,
-          shape: const CircleBorder(),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          child: SvgPicture.asset('assets/svg/icons/shop.svg'),
-          onPressed: () {
-            setState(() {
-              _currentIndex = 2;
-            });
-          },
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: Stack(
-        children: [
-          _pages[_currentIndex], // Display the current page
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: CustomNavigationBar(
-              currentIndex: _currentIndex,
-              onTabTapped: (index) {
-                setState(() {
-                  _currentIndex = index; // Update the current index
+            child: FloatingActionButton(
+              splashColor: primaryColor,
+              shape: const CircleBorder(),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              child: SvgPicture.asset('assets/svg/icons/shop.svg'),
+              onPressed: () {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  setState(() {
+                    indexProvider.index = 2;
+                  });
                 });
               },
             ),
           ),
-        ],
-      ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          body: Stack(
+            children: [
+              _pages[indexProvider.index], // Display the current page
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: CustomNavigationBar(
+                  currentIndex: indexProvider.index,
+                  onTabTapped: (index) {
+                    setState(() {
+                      indexProvider.index = index; // Update the current index
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
